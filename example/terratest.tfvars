@@ -1,6 +1,6 @@
-resource_group_name = "RG-DEV-CCM-01"
+resource_group_name = "rg-lab-cpp-faterratest"
 redis_server_settings = {
-    <redis-name> = {
+    test-redis = {
       sku_name = "Premium"
       capacity = 0
       public_network_access_enabled = false
@@ -17,7 +17,7 @@ redis_configuration = {
 
 subnet_config = {
   enable_data_lookup   = true
-  subnet_name          = "SN-NFT-AZDAT-CCM-02"
-  virtual_network_name = "VN-NFT-INT-01"
-  resource_group_name  = "RG-NFT-CORE-01"
+  subnet_name          = "sn-lab-cpp-faterratest"
+  virtual_network_name = "vnet-lab-cpp-faterratest"
+  resource_group_name  = "rg-lab-cpp-faterratest"
 }
