@@ -24,7 +24,7 @@ func TestTerraformRedis(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Assert inputs with outputs
-	outputs_instance_id := terraform.Output(t, terraformOptions, "redis_id")
+	outputs_instance_id := terraform.Output(t, terraformOptions, "redis_cache_instance_id")
 	//outputs_hostname := terraform.Output(t, terraformOptions, "redis_hostname")
 	assert.Equal(t, "[]", outputs_instance_id)
 	//assert.Equal(t, "[]", outputs_hostname)
