@@ -8,7 +8,6 @@ output "redis_cache_hostname" {
   value       = element(concat([for h in azurerm_redis_cache.main : h.hostname], [""]), 0)
 }
 
-
 output "redis_cache_ssl_port" {
   description = "The SSL Port of the Redis Instance"
   value       = element(concat([for p in azurerm_redis_cache.main : p.ssl_port], [""]), 0)
@@ -48,5 +47,3 @@ output "redis_configuration_maxclients" {
   description = "Returns the max number of connected clients at the same time."
   value       = element(concat([for m in azurerm_redis_cache.main : m.redis_configuration.0.maxclients], [""]), 0)
 }
-
-

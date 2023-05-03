@@ -1,19 +1,22 @@
-resource_group_name = "rg-lab-cpp-faterratest"
+
 redis_server_settings = {
-    test-redis = {
-      sku_name = "Premium"
-      capacity = 0
-      public_network_access_enabled = false
-      minimum_tls_version= 1.2
-    }
+  test-redis = {
+    sku_name                      = "Premium"
+    capacity                      = 2
+    resource_group_name           = "rg-lab-cpp-faterratest"
+    public_network_access_enabled = false
+    minimum_tls_version           = 1.2
   }
+}
 
 redis_configuration = {
-    enable_authentication = false
-    maxmemory_reserved = 2
-    maxmemory_delta    = 2
-    maxmemory_policy   = "volatile-lru"
-  }
+  enable_authentication           = false
+  maxmemory_reserved              = 2
+  maxmemory_delta                 = 2
+  maxmemory_policy                = "volatile-lru"
+  maxfragmentationmemory_reserved = 200
+  notify_keyspace_events          = null
+}
 
 subnet_config = {
   enable_data_lookup   = true

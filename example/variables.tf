@@ -13,9 +13,7 @@ variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
     sku_name                      = string
-    enable_non_ssl_port           = bool
     minimum_tls_version           = string
-    private_static_ip_address     = string
     public_network_access_enabled = string
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
@@ -42,12 +40,12 @@ variable "redis_configuration" {
     notify_keyspace_events          = string
   })
   description = "Configuration for the Redis instance"
-  default     = {
-    enable_authentication = false
-    maxmemory_reserved = 200
-    maxmemory_delta = 200
-    maxmemory_policy = "volatile-lru"
+  default = {
+    enable_authentication           = false
+    maxmemory_reserved              = 200
+    maxmemory_delta                 = 200
+    maxmemory_policy                = "volatile-lru"
     maxfragmentationmemory_reserved = 200
-    notify_keyspace_events = null
+    notify_keyspace_events          = null
   }
 }
