@@ -1,3 +1,14 @@
+
+variable "location" {
+  type    = string
+  default = "uksouth"
+}
+
+variable "resource_group_name" {
+  description = "A container that holds related resources for an Azure solution"
+  default     = ""
+}
+
 variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
