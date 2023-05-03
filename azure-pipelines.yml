@@ -1,7 +1,7 @@
 name: CPP Azure Redis Instance
 trigger: none
 pr:
-- main
+- redis-module
 
 resources:
   repositories:
