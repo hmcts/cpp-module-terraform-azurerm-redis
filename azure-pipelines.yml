@@ -16,18 +16,6 @@ resources:
       name: hmcts/cpp-azure-devops-templates
       endpoint: 'cpp-apps'
 
-stages:
-  - stage: precommit
-    pool:
-      name: "MDV-ADO-AGENTS-01"
-    jobs:
-    - job: precommit
-      steps:
-      - template: steps/terraform/terraform-precommit.yaml@cppAzureDevOpsTemplates
-        parameters:
-          tfversion: ${{ parameters.tfversion }}
-          pythonVersion: ${{ parameters.pythonVersion }}
-
 extends:
   template: pipelines/terratest.yaml@cppAzureDevOpsTemplates
   parameters:
