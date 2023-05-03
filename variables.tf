@@ -7,6 +7,12 @@ variable "resource_group_name" {
   type        = string
   description = "AKS resource group name"
 }
+
+variable "redis_instance_name" {
+  description = "The name of the Redis instance"
+  default     = ""
+}
+
 variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
@@ -15,6 +21,9 @@ variable "redis_server_settings" {
     minimum_tls_version           = optional(string)
     private_static_ip_address     = optional(string)
     public_network_access_enabled = optional(string)
+    replicas_per_master           = optional(number)
+    shard_count                   = optional(number)
+    zones                         = optional(list(string))
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}
@@ -28,6 +37,15 @@ variable "redis_family" {
     Standard = "C"
     Premium  = "P"
   }
+}
+
+variable "patch_schedule" {
+  type = object({
+    day_of_week    = string
+    start_hour_utc = number
+  })
+  description = "The window for redis maintenance. The Patch Window lasts for 5 hours from the `start_hour_utc` "
+  default     = null
 }
 
 variable "subnet_id" {
@@ -48,6 +66,11 @@ variable "redis_configuration" {
   default     = {}
 }
 
+variable "storage_account_name" {
+  description = "The name of the storage account name"
+  default     = null
+}
+
 variable "enable_data_persistence" {
   description = "Enable or disbale Redis Database Backup. Only supported on Premium SKU's"
   default     = false
@@ -61,6 +84,12 @@ variable "data_persistence_backup_frequency" {
 variable "data_persistence_backup_max_snapshot_count" {
   description = "The maximum number of snapshots to create as a backup. Only supported for Premium SKU's"
   default     = 1
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
 
 variable "namespace" {
