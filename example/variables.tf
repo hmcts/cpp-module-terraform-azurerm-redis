@@ -42,5 +42,12 @@ variable "redis_configuration" {
     notify_keyspace_events          = string
   })
   description = "Configuration for the Redis instance"
-  default     = {}
+  default     = {
+    enable_authentication = false
+    maxmemory_reserved = 200
+    maxmemory_delta = 200
+    maxmemory_policy = volatile-lru
+    maxfragmentationmemory_reserved = 200
+    notify_keyspace_events = null
+  }
 }
