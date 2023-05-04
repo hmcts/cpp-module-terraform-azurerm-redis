@@ -39,7 +39,9 @@ variable "redis_configuration" {
     enable_authentication = bool
   })
   description = "Configuration for the Redis instance"
-  default     = {}
+  default = {
+    enable_authentication = true
+  }
 }
 
 

@@ -36,11 +36,7 @@ resource "azurerm_redis_cache" "main" {
   minimum_tls_version           = each.value["minimum_tls_version"]
   private_static_ip_address     = each.value["private_static_ip_address"]
   public_network_access_enabled = each.value["public_network_access_enabled"]
-  replicas_per_master           = each.value["sku_name"] == "Premium" ? each.value["replicas_per_master"] : null
-  shard_count                   = each.value["sku_name"] == "Premium" ? each.value["shard_count"] : null
-  subnet_id                     = each.value["sku_name"] == "Premium" ? var.subnet_id : null
-  #zones                         = each.value["zones"]
-  tags = merge({ "Name" = format("%s", each.key) }, var.tags, )
+  #subnet_id                     = each.value["sku_name"] == "Premium" ? var.subnet_id : null
 
   redis_configuration {
     #  aof_backup_enabled              = var.enable_aof_backup
