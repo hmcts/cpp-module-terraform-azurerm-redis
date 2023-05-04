@@ -1,4 +1,4 @@
-
+resource_group_name           = "rg-lab-cpp-faterratest"
 redis_server_settings = {
   test-redis = {
     sku_name                      = "Premium"
@@ -6,11 +6,15 @@ redis_server_settings = {
     resource_group_name           = "rg-lab-cpp-faterratest"
     public_network_access_enabled = false
     minimum_tls_version           = 1.2
+    enable_non_ssl_port           = true
+    private_static_ip_address     = ""
+    replicas_per_master           = 1
+    shard_count                   = 1
   }
 }
 
 redis_configuration = {
-  enable_authentication           = false
+  enable_authentication           = true
   maxmemory_reserved              = 2
   maxmemory_delta                 = 2
   maxmemory_policy                = "volatile-lru"

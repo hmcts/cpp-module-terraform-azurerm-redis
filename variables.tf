@@ -23,7 +23,7 @@ variable "redis_server_settings" {
     public_network_access_enabled = string
     replicas_per_master           = number
     shard_count                   = number
-    zones                         = list(string)
+    #zones                         = list(string)
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}

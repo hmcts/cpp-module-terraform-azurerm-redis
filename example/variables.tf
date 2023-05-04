@@ -13,8 +13,13 @@ variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
     sku_name                      = string
+    enable_non_ssl_port           = bool
     minimum_tls_version           = string
+    private_static_ip_address     = string
     public_network_access_enabled = string
+    replicas_per_master           = number
+    shard_count                   = number
+    #zones                         = list(string)
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}
