@@ -72,8 +72,3 @@ resource "azurerm_redis_cache" "main" {
   }
 
 }
-
-resource "azurerm_private_dns_zone" "dnszone1" {
-  name                = "privatelink.redis.cache.windows.net"
-  resource_group_name = var.resource_group_name
-}
