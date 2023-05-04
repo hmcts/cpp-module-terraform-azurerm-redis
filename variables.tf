@@ -4,9 +4,10 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "AKS resource group name"
+  description = "A container that holds related resources for an Azure solution"
+  default     = ""
 }
+
 
 variable "redis_instance_name" {
   description = "The name of the Redis instance"
