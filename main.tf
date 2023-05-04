@@ -70,4 +70,10 @@ resource "azurerm_redis_cache" "main" {
     # A bug in the Redis API where the original storage connection string isn't being returneds
     ignore_changes = [redis_configuration.0.rdb_storage_connection_string]
   }
+
+}
+
+resource "azurerm_private_dns_zone" "dnszone1" {
+  name                = "privatelink.redis.cache.windows.net"
+  resource_group_name = var.resource_group_name
 }
