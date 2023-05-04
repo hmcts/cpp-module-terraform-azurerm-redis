@@ -18,10 +18,10 @@ variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
     sku_name                      = string
-    enable_non_ssl_port           = optional(bool, false)
-    minimum_tls_version           = optional(string, "1.2")
-    private_static_ip_address     = optional(string, null)
-    public_network_access_enabled = optional(string, "false")
+    enable_non_ssl_port           = bool
+    minimum_tls_version           = string
+    private_static_ip_address     = string
+    public_network_access_enabled = string
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}
@@ -53,15 +53,22 @@ variable "subnet_id" {
 
 variable "redis_configuration" {
   type = object({
-    enable_authentication           = optional(bool, false)
-    maxmemory_reserved              = optional(number, 2)
-    maxmemory_delta                 = optional(number, 2)
-    maxmemory_policy                = optional(string, null)
-    maxfragmentationmemory_reserved = optional(number, 2)
-    notify_keyspace_events          = optional(string, null)
+    enable_authentication           = bool
+    maxmemory_reserved              = number
+    maxmemory_delta                 = number
+    maxmemory_policy                = string
+    maxfragmentationmemory_reserved = number
+    notify_keyspace_events          = string
   })
   description = "Configuration for the Redis instance"
-  default     = {}
+  default = {
+    enable_authentication           = true
+    maxmemory_reserved              = 200
+    maxmemory_delta                 = 200
+    maxmemory_policy                = "volatile-lru"
+    maxfragmentationmemory_reserved = 200
+    notify_keyspace_events          = null
+  }
 }
 
 variable "storage_account_name" {

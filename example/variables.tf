@@ -19,6 +19,8 @@ variable "redis_server_settings" {
     sku_name                      = string
     minimum_tls_version           = string
     public_network_access_enabled = string
+    private_static_ip_address     = string
+    enable_non_ssl_port           = bool
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}

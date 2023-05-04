@@ -13,6 +13,8 @@ redis_server_settings = {
     capacity                      = 1
     public_network_access_enabled = false
     minimum_tls_version           = 1.2
+    private_static_ip_address     = null
+    enable_non_ssl_port           = false
   }
 }
 
