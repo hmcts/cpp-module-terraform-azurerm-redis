@@ -28,8 +28,8 @@ func TestTerraformRedis(t *testing.T) {
 	outputs_hostname := terraform.Output(t, terraformOptions, "redis_cache_hostname")
 	outputs_ssl_port := terraform.Output(t, terraformOptions, "redis_cache_ssl_port")
 
-	assert.Equal(t, "[/subscriptions/8cdb5405-7535-4349-92e9-f52bddc7833a/resourceGroups/rg-lab-cpp-redisterratest/providers/Microsoft.Cache/redis/test-redis]", outputs_instance_id)
-	assert.Equal(t, "[test-redis.redis.cache.windows.net]", outputs_hostname)
-	assert.Equal(t, "[6380]", outputs_ssl_port)
+	assert.Equal(t, "/subscriptions/8cdb5405-7535-4349-92e9-f52bddc7833a/resourceGroups/rg-lab-cpp-redisterratest/providers/Microsoft.Cache/redis/test-redis", outputs_instance_id)
+	assert.Equal(t, "test-redis.redis.cache.windows.net", outputs_hostname)
+	assert.Equal(t, "6380", outputs_ssl_port)
 
 }
