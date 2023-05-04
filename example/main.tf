@@ -1,5 +1,5 @@
 module "redis" {
-  for_each            = var.redis_server_settings
+  #for_each            = var.redis_server_settings
   source              = "../"
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -13,8 +13,8 @@ module "redis" {
 
   redis_configuration = {
     enable_authentication           = lookup(var.redis_configuration, "enable_authentication", true)
-    maxmemory_reserved              = each.value["sku_name"] == "Premium" || each.value["sku_name"] == "Standard" ? lookup(var.redis_configuration, "maxmemory_reserved") : null
-    maxmemory_delta                 = each.value["sku_name"] == "Premium" || each.value["sku_name"] == "Standard" ? lookup(var.redis_configuration, "maxmemory_delta") : null
+    maxmemory_reserved              = lookup(var.redis_configuration, "maxmemory_reserved")
+    maxmemory_delta                 = lookup(var.redis_configuration, "maxmemory_delta")
     maxmemory_policy                = lookup(var.redis_configuration, "maxmemory_policy")
     maxfragmentationmemory_reserved = 200
     notify_keyspace_events          = null
