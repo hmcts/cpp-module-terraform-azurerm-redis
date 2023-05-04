@@ -19,7 +19,12 @@ redis_server_settings = {
 }
 
 redis_configuration = {
-  enable_authentication = true
+  enable_authentication           = true
+  maxmemory_reserved              = 200
+  maxmemory_delta                 = 200
+  maxmemory_policy                = "volatile-lru"
+  maxfragmentationmemory_reserved = 200
+  notify_keyspace_events          = null
 }
 
 subnet_config = {

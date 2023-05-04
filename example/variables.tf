@@ -38,11 +38,22 @@ variable "redis_family" {
 
 variable "redis_configuration" {
   type = object({
-    enable_authentication = bool
+    enable_authentication           = bool
+    maxmemory_reserved              = number
+    maxmemory_delta                 = number
+    maxmemory_policy                = string
+    maxfragmentationmemory_reserved = number
+    notify_keyspace_events          = string
+
   })
   description = "Configuration for the Redis instance"
   default = {
-    enable_authentication = true
+    enable_authentication           = true
+    maxmemory_reserved              = 200
+    maxmemory_delta                 = 200
+    maxmemory_policy                = "volatile-lru"
+    maxfragmentationmemory_reserved = 200
+    notify_keyspace_events          = null
   }
 }
 
