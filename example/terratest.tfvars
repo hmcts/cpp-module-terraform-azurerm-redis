@@ -1,4 +1,4 @@
-resource_group_name           = "rg-lab-cpp-faterratest"
+resource_group_name = "rg-lab-cpp-faterratest"
 redis_server_settings = {
   test-redis = {
     sku_name                      = "Premium"

@@ -40,7 +40,7 @@ resource "azurerm_redis_cache" "main" {
   shard_count                   = each.value["sku_name"] == "Premium" ? each.value["shard_count"] : null
   subnet_id                     = each.value["sku_name"] == "Premium" ? var.subnet_id : null
   #zones                         = each.value["zones"]
-  tags                          = merge({ "Name" = format("%s", each.key) }, var.tags, )
+  tags = merge({ "Name" = format("%s", each.key) }, var.tags, )
 
   redis_configuration {
     #  aof_backup_enabled              = var.enable_aof_backup

@@ -1,7 +1,7 @@
 module "redis" {
-  source              = "../"
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  source                = "../"
+  resource_group_name   = var.resource_group_name
+  location              = var.location
   redis_server_settings = var.redis_server_settings
 
   redis_configuration = {
