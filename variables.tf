@@ -18,13 +18,13 @@ variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
     sku_name                      = string
-    enable_non_ssl_port           = bool
-    minimum_tls_version           = string
-    private_static_ip_address     = string
-    public_network_access_enabled = string
-    replicas_per_master           = number
-    shard_count                   = number
-    #zones                         = list(string)
+    enable_non_ssl_port           = optional(bool)
+    minimum_tls_version           = optional(string)
+    private_static_ip_address     = optional(string)
+    public_network_access_enabled = optional(string)
+    replicas_per_master           = optional(number)
+    shard_count                   = optional(number)
+    zones                         = optional(list(string))
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}
@@ -56,23 +56,15 @@ variable "subnet_id" {
 
 variable "redis_configuration" {
   type = object({
-    enable_authentication           = bool
-    maxmemory_reserved              = number
-    maxmemory_delta                 = number
-    maxmemory_policy                = string
-    maxfragmentationmemory_reserved = number
-    notify_keyspace_events          = string
+    enable_authentication           = optional(bool)
+    maxmemory_reserved              = optional(number)
+    maxmemory_delta                 = optional(number)
+    maxmemory_policy                = optional(string)
+    maxfragmentationmemory_reserved = optional(number)
+    notify_keyspace_events          = optional(string)
   })
   description = "Configuration for the Redis instance"
-  default = {
-    enable_authentication           = false
-    maxmemory_reserved              = 200
-    maxmemory_delta                 = 200
-    maxmemory_policy                = "volatile-lru"
-    maxfragmentationmemory_reserved = 200
-    notify_keyspace_events          = null
-
-  }
+  default     = {}
 }
 
 variable "storage_account_name" {
