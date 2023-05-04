@@ -13,18 +13,12 @@ redis_server_settings = {
     capacity                      = 1
     public_network_access_enabled = false
     minimum_tls_version           = 1.2
-    private_static_ip_address     = null
     enable_non_ssl_port           = false
   }
 }
 
 redis_configuration = {
-  enable_authentication           = true
-  maxmemory_reserved              = 200
-  maxmemory_delta                 = 200
-  maxmemory_policy                = "volatile-lru"
-  maxfragmentationmemory_reserved = 200
-  notify_keyspace_events          = null
+  enable_authentication = true
 }
 
 subnet_config = {
