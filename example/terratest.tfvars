@@ -20,10 +20,3 @@ redis_server_settings = {
 redis_configuration = {
   enable_authentication = true
 }
-
-subnet_config = {
-  enable_data_lookup   = true
-  subnet_name          = "sn-lab-cpp-faterratest"
-  virtual_network_name = "vnet-lab-cpp-faterratest"
-  resource_group_name  = "rg-lab-cpp-faterratest"
-}
