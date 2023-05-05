@@ -38,7 +38,6 @@ resource "azurerm_redis_cache" "main" {
   public_network_access_enabled = each.value["public_network_access_enabled"]
   replicas_per_master           = each.value["sku_name"] == "Premium" ? each.value["replicas_per_master"] : null
   shard_count                   = each.value["sku_name"] == "Premium" ? each.value["shard_count"] : null
-  subnet_id                     = each.value["sku_name"] == "Premium" ? var.subnet_id : null
   zones                         = each.value["zones"]
   tags                          = merge({ "Name" = format("%s", each.key) }, var.tags, )
 
@@ -57,6 +56,7 @@ resource "azurerm_redis_cache" "main" {
     rdb_backup_max_snapshot_count   = each.value["sku_name"] == "Premium" && var.enable_data_persistence == true ? var.data_persistence_backup_max_snapshot_count : null
     rdb_storage_connection_string   = each.value["sku_name"] == "Premium" && var.enable_data_persistence == true ? azurerm_storage_account.storeacc.0.primary_blob_connection_string : null
   }
+  subnet_id = each.value["sku_name"] == "Premium" ? var.subnet_id : null
 
   dynamic "patch_schedule" {
     for_each = var.patch_schedule != null ? [var.patch_schedule] : []
