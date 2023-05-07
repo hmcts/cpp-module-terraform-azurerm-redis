@@ -23,6 +23,15 @@ resource "azurerm_storage_account" "storeacc" {
   tags                      = merge({ "Name" = format("%s", "stsqlauditlogs") }, var.tags, )
 }
 
+resource "azurerm_subnet" "subnet_id" {
+  name                                      = var.subnet_config.subnet_name
+  resource_group_name                       = var.subnet_config.resource_group_name
+  virtual_network_name                      = var.subnet_config.virtual_network_name
+  address_prefixes                          = var.subnet_config.address_prefixes
+  service_endpoints                         = var.subnet_config.service_endpoints
+  private_endpoint_network_policies_enabled = var.subnet_config.private_endpoint_network_policies_enabled
+}
+
 # Redis Cache Instance configuration
 resource "azurerm_redis_cache" "main" {
   for_each                      = var.redis_server_settings
@@ -38,7 +47,7 @@ resource "azurerm_redis_cache" "main" {
   public_network_access_enabled = each.value["public_network_access_enabled"]
   replicas_per_master           = each.value["sku_name"] == "Premium" ? each.value["replicas_per_master"] : null
   shard_count                   = each.value["sku_name"] == "Premium" ? each.value["shard_count"] : null
-  subnet_id                     = each.value["sku_name"] == "Premium" ? var.subnet_id : null
+  subnet_id                     = each.value["sku_name"] == "Premium" ? azurerm_subnet.subnet_id.id : null
   zones                         = each.value["zones"]
   tags                          = merge({ "Name" = format("%s", each.key) }, var.tags, )
 

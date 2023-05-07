@@ -3,11 +3,62 @@ variable "location" {
   default = "uksouth"
 }
 
+variable "subnet_config" {
+  description = "VNET, Subnet and resourcegroup details"
+  type = object({
+    subnet_name                               = string
+    virtual_network_name                      = string
+    resource_group_name                       = string
+    address_prefixes                          = list(string)
+    service_endpoints                         = list(string)
+    private_endpoint_network_policies_enabled = bool
+  })
+  default = {
+    subnet_name                               = null
+    virtual_network_name                      = null
+    resource_group_name                       = null
+    address_prefixes                          = null
+    service_endpoints                         = ["Microsoft.Storage"]
+    private_endpoint_network_policies_enabled = false
+  }
+}
+
 variable "resource_group_name" {
   description = "A container that holds related resources for an Azure solution"
   default     = ""
 }
 
+variable "resource_group_subnet_name" {
+  description = "A container that holds related resources for an Azure solution"
+  default     = ""
+}
+
+variable "private_endpoint_network_policies_enabled" {
+  description = "Enable or Disable network policies for the private endpoint on the subnet"
+  default     = ""
+}
+
+variable "virtual_network_name" {
+  description = "The name of the virtual network"
+  default     = ""
+}
+
+variable "service_endpoints" {
+  type        = list(string)
+  description = "The name of the virtual network"
+  default     = ["Microsoft.Storage"]
+}
+
+variable "private_subnet_address_prefix" {
+  type        = list(string)
+  description = "The list of Service endpoints to associate with the subnet"
+  default     = [""]
+}
+
+variable "subnet_name" {
+  description = "The name of the subnet"
+  default     = null
+}
 
 variable "redis_instance_name" {
   description = "The name of the Redis instance"
