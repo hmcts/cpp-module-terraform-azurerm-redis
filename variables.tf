@@ -16,7 +16,7 @@ variable "resource_vnet_group_name" {
 
 variable "private_endpoint_network_policies_enabled" {
   description = "Enable or Disable network policies for the private endpoint on the subnet"
-  default     = ""
+  default     = false
 }
 
 variable "virtual_network_name" {
