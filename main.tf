@@ -24,12 +24,12 @@ resource "azurerm_storage_account" "storeacc" {
 }
 
 resource "azurerm_subnet" "subnet_id" {
-  name                                      = var.subnet_config.subnet_name
-  resource_group_name                       = var.subnet_config.resource_group_name
-  virtual_network_name                      = var.subnet_config.virtual_network_name
-  address_prefixes                          = var.subnet_config.address_prefixes
-  service_endpoints                         = var.subnet_config.service_endpoints
-  private_endpoint_network_policies_enabled = var.subnet_config.private_endpoint_network_policies_enabled
+  name                                      = var.subnet_name
+  resource_group_name                       = var.resource_vnet_group_name
+  virtual_network_name                      = var.virtual_network_name
+  address_prefixes                          = var.address_prefixes
+  service_endpoints                         = var.service_endpoints
+  private_endpoint_network_policies_enabled = var.private_endpoint_network_policies_enabled
 }
 
 # Redis Cache Instance configuration

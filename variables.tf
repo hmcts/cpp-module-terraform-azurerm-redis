@@ -3,32 +3,13 @@ variable "location" {
   default = "uksouth"
 }
 
-variable "subnet_config" {
-  description = "VNET, Subnet and resourcegroup details"
-  type = object({
-    subnet_name                               = string
-    virtual_network_name                      = string
-    resource_group_name                       = string
-    address_prefixes                          = list(string)
-    service_endpoints                         = list(string)
-    private_endpoint_network_policies_enabled = bool
-  })
-  default = {
-    subnet_name                               = null
-    virtual_network_name                      = null
-    resource_group_name                       = null
-    address_prefixes                          = null
-    service_endpoints                         = ["Microsoft.Storage"]
-    private_endpoint_network_policies_enabled = false
-  }
-}
 
 variable "resource_group_name" {
   description = "A container that holds related resources for an Azure solution"
   default     = ""
 }
 
-variable "resource_group_subnet_name" {
+variable "resource_vnet_group_name" {
   description = "A container that holds related resources for an Azure solution"
   default     = ""
 }
@@ -49,7 +30,7 @@ variable "service_endpoints" {
   default     = ["Microsoft.Storage"]
 }
 
-variable "private_subnet_address_prefix" {
+variable "address_prefixes" {
   type        = list(string)
   description = "The list of Service endpoints to associate with the subnet"
   default     = [""]
