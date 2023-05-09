@@ -9,37 +9,6 @@ variable "resource_group_name" {
   default     = ""
 }
 
-variable "resource_vnet_group_name" {
-  description = "A container that holds related resources for an Azure solution"
-  default     = ""
-}
-
-variable "private_endpoint_network_policies_enabled" {
-  description = "Enable or Disable network policies for the private endpoint on the subnet"
-  default     = false
-}
-
-variable "virtual_network_name" {
-  description = "The name of the virtual network"
-  default     = ""
-}
-
-variable "service_endpoints" {
-  type        = list(string)
-  description = "The name of the virtual network"
-  default     = ["Microsoft.Storage"]
-}
-
-variable "address_prefixes" {
-  type        = list(string)
-  description = "The list of Service endpoints to associate with the subnet"
-  default     = [""]
-}
-
-variable "subnet_name" {
-  description = "The name of the subnet"
-  default     = null
-}
 
 variable "redis_instance_name" {
   description = "The name of the Redis instance"
