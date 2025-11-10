@@ -1,6 +1,6 @@
 output "redis_cache_instance_id" {
   description = "The Route ID of Redis Cache Instance"
-  value       = element(concat([for n in azurerm_redis_cache.main : n.id], [""]), 0)
+  value       = length(azurerm_redis_cache.main) > 0 ? values(azurerm_redis_cache.main)[0].id : "" # ★ CHANGED: More explicit null handling
 }
 
 output "redis_cache_hostname" {
@@ -15,7 +15,7 @@ output "redis_cache_ssl_port" {
 
 output "redis_cache_port" {
   description = "The non-SSL Port of the Redis Instance"
-  value       = element(concat([for p in azurerm_redis_cache.main : p.port if p == true], [""]), 0)
+  value       = element(concat([for p in azurerm_redis_cache.main : p.port if p.non_ssl_port_enabled], [""]), 0) # ★ CHANGED: Fixed from "if p == true" to "if p.non_ssl_port_enabled"
   sensitive   = true
 }
 
@@ -46,4 +46,25 @@ output "redis_cache_secondary_connection_string" {
 output "redis_configuration_maxclients" {
   description = "Returns the max number of connected clients at the same time."
   value       = element(concat([for m in azurerm_redis_cache.main : m.redis_configuration.0.maxclients], [""]), 0)
+}
+
+# Private Endpoint Outputs
+output "private_dns_zone_id" {
+  description = "The ID of the Private DNS Zone for Redis Cache"
+  value       = var.enable_private_endpoint && var.create_private_dns_zone ? azurerm_private_dns_zone.redis[0].id : null
+}
+
+output "private_endpoint_id" {
+  description = "Map of Redis Cache names to their Private Endpoint IDs"
+  value       = var.enable_private_endpoint ? { for k, v in azurerm_private_endpoint.redis : k => v.id } : {}
+}
+
+output "private_endpoint_ip_address" {
+  description = "Map of Redis Cache names to their Private Endpoint IP addresses"
+  value       = var.enable_private_endpoint ? { for k, v in azurerm_private_endpoint.redis : k => v.private_service_connection[0].private_ip_address } : {}
+}
+
+output "private_endpoint_fqdn" {
+  description = "Map of Redis Cache names to their Private Endpoint FQDNs"
+  value       = var.enable_private_endpoint ? { for k, v in azurerm_private_endpoint.redis : k => try(v.custom_dns_configs[0].fqdn, "") } : {}
 }

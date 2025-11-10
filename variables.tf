@@ -19,16 +19,24 @@ variable "redis_server_settings" {
   type = map(object({
     capacity                      = number
     sku_name                      = string
-    enable_non_ssl_port           = optional(bool)
-    minimum_tls_version           = optional(string)
+    enable_non_ssl_port           = optional(bool, false)
+    minimum_tls_version           = optional(string, "1.2")
     private_static_ip_address     = optional(string)
-    public_network_access_enabled = optional(string)
+    public_network_access_enabled = optional(bool, false)
     replicas_per_master           = optional(number)
     shard_count                   = optional(number)
     zones                         = optional(list(string))
   }))
-  description = "optional redis server setttings for both Premium and Standard/Basic SKU"
+  description = "Redis server settings for Premium, Standard, and Basic SKUs"
   default     = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.redis_server_settings :
+      contains(["Basic", "Standard", "Premium"], v.sku_name)
+    ])
+    error_message = "sku_name must be one of: Basic, Standard, Premium"
+  }
 }
 
 variable "redis_family" {
@@ -51,7 +59,37 @@ variable "patch_schedule" {
 }
 
 variable "subnet_id" {
-  description = "The ID of the Subnet within which the Redis Cache should be deployed. Only available when using the Premium SKU"
+  description = "The ID of the Subnet within which the Redis Cache should be deployed. Only available when using the Premium SKU with VNET Integration"
+  default     = null
+}
+
+variable "enable_private_endpoint" {
+  description = "Enable private endpoint for Redis Cache. Required for Basic/Standard SKUs network isolation, optional for Premium"
+  type        = bool
+  default     = false
+}
+
+variable "private_endpoint_subnet_id" {
+  description = "The ID of the Subnet from which Private IP Addresses will be allocated for the Private Endpoint. Required when enable_private_endpoint is true"
+  type        = string
+  default     = null
+}
+
+variable "create_private_dns_zone" {
+  description = "Whether to create a new Private DNS Zone for Redis Cache. Set to false if you want to use an existing zone"
+  type        = bool
+  default     = true
+}
+
+variable "private_dns_zone_ids" {
+  description = "List of existing Private DNS Zone IDs to associate with the private endpoint. Only used when create_private_dns_zone is false. Should be the ID(s) of privatelink.redis.cache.windows.net zone"
+  type        = list(string)
+  default     = []
+}
+
+variable "vnet_id" {
+  description = "The ID of the Virtual Network to link the Private DNS Zone to. Required when enable_private_endpoint and create_private_dns_zone are true"
+  type        = string
   default     = null
 }
 
