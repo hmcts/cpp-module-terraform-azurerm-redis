@@ -11,16 +11,16 @@ resource "random_string" "str" {
 
 resource "azurerm_storage_account" "storeacc" {
   #  for_each                  = var.redis_configuration != {} ? { for rdb_backup_enabled, v in var.redis_configuration : rdb_backup_enabled => v if v == true } : null
-  count                     = var.enable_data_persistence ? 1 : 0
-  name                      = var.storage_account_name == null ? "rediscachebkpstore${random_string.str.0.result}" : substr(var.storage_account_name, 0, 24)
-  resource_group_name       = var.resource_group_name
-  location                  = var.location
-  account_kind              = "StorageV2"
-  account_tier              = "Standard"
-  account_replication_type  = "GRS"
-  enable_https_traffic_only = true
-  min_tls_version           = "TLS1_2"
-  tags                      = merge({ "Name" = format("%s", "stsqlauditlogs") }, var.tags, )
+  count                      = var.enable_data_persistence ? 1 : 0
+  name                       = var.storage_account_name == null ? "rediscachebkpstore${random_string.str.0.result}" : substr(var.storage_account_name, 0, 24)
+  resource_group_name        = var.resource_group_name
+  location                   = var.location
+  account_kind               = "StorageV2"
+  account_tier               = "Standard"
+  account_replication_type   = "GRS"
+  https_traffic_only_enabled = true
+  min_tls_version            = "TLS1_2"
+  tags                       = merge({ "Name" = format("%s", "stsqlauditlogs") }, var.tags, )
 }
 
 # Redis Cache Instance configuration
@@ -32,7 +32,7 @@ resource "azurerm_redis_cache" "main" {
   capacity                      = each.value["capacity"]
   family                        = lookup(var.redis_family, each.value.sku_name)
   sku_name                      = each.value["sku_name"]
-  enable_non_ssl_port           = each.value["enable_non_ssl_port"]
+  non_ssl_port_enabled          = lookup(each.value, "enable_non_ssl_port", false)
   minimum_tls_version           = each.value["minimum_tls_version"]
   private_static_ip_address     = each.value["private_static_ip_address"]
   public_network_access_enabled = each.value["public_network_access_enabled"]
@@ -46,7 +46,7 @@ resource "azurerm_redis_cache" "main" {
     #  aof_backup_enabled              = var.enable_aof_backup
     #  aof_storage_connection_string_0 = var.enable_aof_backup == true ? azurerm_storage_account.storeacc.0.primary_blob_connection_string : null
     #  aof_storage_connection_string_1 = var.enable_aof_backup == true ? azurerm_storage_account.storeacc.0.secondary_blob_connection_string : null
-    enable_authentication           = lookup(var.redis_configuration, "enable_authentication", true)
+    authentication_enabled          = lookup(var.redis_configuration, "enable_authentication", true)
     maxfragmentationmemory_reserved = each.value["sku_name"] == "Premium" || each.value["sku_name"] == "Standard" ? lookup(var.redis_configuration, "maxfragmentationmemory_reserved") : null
     maxmemory_delta                 = each.value["sku_name"] == "Premium" || each.value["sku_name"] == "Standard" ? lookup(var.redis_configuration, "maxmemory_delta") : null
     maxmemory_policy                = lookup(var.redis_configuration, "maxmemory_policy")
@@ -72,4 +72,53 @@ resource "azurerm_redis_cache" "main" {
     ignore_changes = [redis_configuration.0.rdb_storage_connection_string]
   }
 
+}
+
+# Data source to lookup Virtual Network for Private DNS zone linking
+data "azurerm_virtual_network" "vnet" {
+  count               = var.enable_private_endpoint ? 1 : 0
+  name                = var.virtual_network_name
+  resource_group_name = var.virtual_network_resource_group_name
+}
+
+# Private DNS Zone for Redis (for Basic/Standard with Private Endpoint)
+resource "azurerm_private_dns_zone" "redis" {
+  count               = var.enable_private_endpoint ? 1 : 0
+  name                = "privatelink.redis.cache.windows.net"
+  resource_group_name = var.resource_group_name
+  tags                = merge({ "Name" = "redis-private-dns-zone" }, var.tags)
+}
+
+# Link Private DNS Zone to Virtual Network
+resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
+  count                 = var.enable_private_endpoint ? 1 : 0
+  name                  = "redis-dns-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.redis[0].name
+  virtual_network_id    = data.azurerm_virtual_network.vnet[0].id
+  tags                  = merge({ "Name" = "redis-dns-link" }, var.tags)
+}
+
+# Private Endpoints for each Redis instance (Basic/Standard SKU)
+resource "azurerm_private_endpoint" "redis" {
+  for_each            = var.enable_private_endpoint ? var.redis_server_settings : {}
+  name                = "${each.key}-pe"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.private_endpoint_subnet_id
+  tags                = merge({ "Name" = "${each.key}-private-endpoint" }, var.tags)
+
+  private_service_connection {
+    name                           = "${each.key}-psc"
+    private_connection_resource_id = azurerm_redis_cache.main[each.key].id
+    is_manual_connection           = false
+    subresource_names              = ["redisCache"]
+  }
+
+  private_dns_zone_group {
+    name                 = "redis-dns-zone-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.redis[0].id]
+  }
+
+  depends_on = [azurerm_redis_cache.main]
 }
